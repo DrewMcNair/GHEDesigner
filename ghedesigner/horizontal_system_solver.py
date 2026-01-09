@@ -53,7 +53,6 @@ class SystemSolver:
 
         # Eq 3: Supply Pipe Physics (ExFT -> T_ghx_in)
         # Balance: (C_f - G)*ExFT - C_f*T_in = -G*Tg + L*b
-        # --- FIX: Dimensionally correct RHS ---
         a[2, 2] = c_f - g_sup
         a[2, 3] = -c_f
         b[2] = -(g_sup * t_ground) + (self.L_sup * b_sup)
@@ -73,7 +72,6 @@ class SystemSolver:
 
         # Eq 6: Return Pipe Physics (T_ghx_out -> EFT)
         # Balance: -C_f*EFT + (C_f - G)*T_out = -G*Tg + L*b
-        # --- FIX: Dimensionally correct RHS ---
         a[5, 1] = -c_f
         a[5, 4] = c_f - g_ret
         b[5] = -(g_ret * t_ground) + (self.L_ret * b_ret)

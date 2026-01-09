@@ -228,7 +228,6 @@ class ParallelPipeSystem:
         delta_t_history = []  # Stores the step-changes in temperature
 
         # Calculate q'(0) - the immediate response
-        # From PDF page 7, q'(0) = 1 / beta
         q_prime_0 = 1.0 / beta
 
         lambda_soil = self.soil.k
@@ -243,8 +242,6 @@ class ParallelPipeSystem:
             # 2. History Term (Convolution of past changes * response)
             history_term = 0.0
             if n > 0:
-                # We need q' values for elapsed times [dt, 2dt, ... (n)*dt]
-                # These correspond to indices [0, 1, ... n-1] in the response_factors array
                 relevant_q = response_factors[:n]
 
                 # Reverse deltas so the most recent change multiplies the earliest q'
@@ -254,7 +251,6 @@ class ParallelPipeSystem:
                 history_term = np.dot(reversed_deltas, relevant_q)
 
             # 3. Solve for NEW temperature step
-            # Formula derived from superposition of step pulses
             delta_t = (load_term - history_term) / q_prime_0
 
             # 4. Update state

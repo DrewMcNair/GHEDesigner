@@ -30,7 +30,6 @@ def worker_task(args):
     d, b, beta = args
 
     # Re-create the system objects inside the worker process
-    # (This is safer for multiprocessing than passing complex objects)
     pipe = MockPipe(r_out=0.1, k=0.4)
     soil = MockSoil(k=1.5, rhocp=2.3e6)
 
@@ -85,7 +84,6 @@ def main():
     # --- Start the Parallel Pool ---
     # processes=16 uses all your cores. Change this number if you want to leave some free.
     with multiprocessing.Pool(processes=16) as pool:
-        # imap_unordered is efficient and lets us track progress as jobs finish
         for result in pool.imap_unordered(worker_task, all_jobs):
             key, interpolator = result
             interpolator_table[key] = interpolator

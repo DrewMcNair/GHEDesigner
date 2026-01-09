@@ -4,7 +4,7 @@ import pygfunction as gt
 
 from ghedesigner.horizontal_interpolator import ResponseInterpolator
 
-# Import your classes
+# Import classes
 from ghedesigner.horizontal_system_solver import SystemSolver
 
 # -------------------------------------------------------------------------
@@ -66,7 +66,6 @@ for L_vert, L_horiz in scenarios:
     print(f"  > Simulating: {label}")
 
     # A. Recalculate Vertical g-functions for this specific Depth (H)
-    # Note: Shorter boreholes have different g-functions!
     borefield = gt.boreholes.rectangle_field(N_1=1, N_2=1, B_1=5, B_2=5, H=L_vert, D=4, r_b=0.075)
     gfunc = gt.gfunction.gFunction(borefield, alpha=alpha, time=time_values)
     g_values = gfunc.gFunc
