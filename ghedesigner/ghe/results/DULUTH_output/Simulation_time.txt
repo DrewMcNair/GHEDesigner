@@ -1,0 +1,24 @@
+LOCATION: DULUTH
+
+This is the best times I could achieve for each simulation: I am writing time with total drilling, as we want to see how accurate models are. Our reference in the quadratic model, we consider it to be the most accurate.
+
+
+Quadratic
+
+Time: 14.4 sec
+total drilling - 392 m
+
+Linearized
+
+Time: 11.545 sec
+total drilling - 392 m
+
+Linear
+
+Time: 11.841 sec
+total drilling -  394 m
+
+constant_COP
+
+Time:   11.124 sec
+total drilling:  402 m

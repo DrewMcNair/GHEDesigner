@@ -1,0 +1,22 @@
+# Values for HP coefficients for quadratic model
+
+# keyword,  a_htg,      b_htg,   c_htg, a_clg,   b_clg,     c_clg
+quadratic, -0.0000713, 0.00534, 0.734, 0.0001,  0.00112,   1.13
+
+
+# Values for HP coefficients for linear model
+
+# keyword,   a_htg,    b_htg,    a_clg,   b_clg
+linear,      0.737,    0.00454,  1.096,   0.00628
+
+# Values for COP
+
+#keyword,    COP_heating,    COP_cooling
+COP,         3.9,            5.0
+
+#Building loads,      loads_file
+Loads,               Loads_DULUTH.csv
+
+HP_model,  constant_COP
+
+solution_method,    matrix_solver

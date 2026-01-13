@@ -2,10 +2,10 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pygfunction as gt
 
-from ghedesigner.horizontal_interpolator import ResponseInterpolator
+from ghedesigner.ghe.horizontal_interpolator import ResponseInterpolator
 
 # Import classes
-from ghedesigner.horizontal_system_solver import SystemSolver
+from ghedesigner.ghe.horizontal_system_solver import SystemSolver
 
 # -------------------------------------------------------------------------
 # 1. SIMULATION CONFIG

@@ -1,0 +1,24 @@
+LOCATION: HOUSTON
+
+This is the best times I could achieve for each simulation: I am writing time with total drilling, as we want to see how accurate models are. Our reference in the quadratic model, we consider it to be the most accurate.
+
+
+Quadratic
+
+Time: 20.631 sec
+total drilling - 390 m
+
+Linearized
+
+Time: 15.543 sec
+total drilling - 390 m
+
+Linear
+
+Time: 15.051 SEC
+total drilling -  395 m
+
+constant_COP
+
+Time:   14.777 sec
+total drilling:  384 m

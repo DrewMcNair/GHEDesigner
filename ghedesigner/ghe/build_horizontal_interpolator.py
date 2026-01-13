@@ -5,7 +5,7 @@ import time
 import numpy as np
 from scipy import interpolate
 
-from ghedesigner.horizontal_pipe_heat_exchange import ParallelPipeSystem
+from ghedesigner.ghe.horizontal_pipe_heat_exchange import ParallelPipeSystem
 
 
 # --- 1. Setup Classes ---
