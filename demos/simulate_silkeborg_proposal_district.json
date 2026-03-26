@@ -1,0 +1,470 @@
+{
+  "version": 3.0,
+  "description": "Silkeborg Multiple GHE-HP System Mockup",
+  "nodes": [
+    { "id": "ghe1", "type": "ground_heat_exchanger" },
+    { "id": "b1", "type": "building" },
+    { "id": "b2", "type": "building" },
+    { "id": "b3", "type": "building" },
+    { "id": "b4", "type": "building" },
+    { "id": "b5", "type": "building" },
+    { "id": "b6", "type": "building" },
+    { "id": "b7", "type": "building" },
+    { "id": "b8", "type": "building" },
+    { "id": "b9", "type": "building" },
+    { "id": "b10", "type": "building" },
+    { "id": "b11", "type": "building" },
+    { "id": "b12", "type": "building" },
+    { "id": "b13", "type": "building" },
+    { "id": "b14", "type": "building" },
+    { "id": "b15", "type": "building" },
+    { "id": "n1", "type": "junction" },
+    { "id": "n2", "type": "junction" },
+    { "id": "n3", "type": "junction" },
+    { "id": "n4", "type": "junction" },
+    { "id": "n5", "type": "junction" },
+    { "id": "n6", "type": "junction" },
+    { "id": "n7", "type": "junction" },
+    { "id": "n8", "type": "junction" },
+    { "id": "n9", "type": "junction" },
+    { "id": "n10", "type": "junction" },
+    { "id": "n11", "type": "junction" },
+    { "id": "n12", "type": "junction" },
+    { "id": "n13", "type": "junction" },
+    { "id": "n14", "type": "junction" },
+    { "id": "n15", "type": "junction" },
+    { "id": "n16", "type": "junction" },
+    { "id": "n17", "type": "junction" },
+    { "id": "n18", "type": "junction" },
+    { "id": "n19", "type": "junction" },
+    { "id": "n20", "type": "junction" },
+    { "id": "n21", "type": "junction" },
+    { "id": "n22", "type": "junction" },
+    { "id": "n23", "type": "junction" },
+    { "id": "n24", "type": "junction" },
+    { "id": "n25", "type": "junction" },
+    { "id": "n26", "type": "junction" },
+    { "id": "n27", "type": "junction" },
+    { "id": "n28", "type": "junction" }
+  ],
+  "pipes": [
+    {
+      "id": "p1",
+      "from": "n3",
+      "to": "n4",
+      "diameter": 0.04,
+      "trench_id": "t1"
+    },
+    {
+      "id": "p2",
+      "from": "n17",
+      "to": "n18",
+      "diameter": 0.04,
+      "trench_id": "t1"
+    },
+    {
+      "id": "p3",
+      "from": "n2",
+      "to": "n3",
+      "diameter": 0.04,
+      "trench_id": "t2"
+    },
+    {
+      "id": "p4",
+      "from": "n16",
+      "to": "n17",
+      "diameter": 0.04,
+      "trench_id": "t2"
+    },
+    {
+      "id": "p5",
+      "from": "n1",
+      "to": "n2",
+      "diameter": 0.04,
+      "trench_id": "t3"
+    },
+    {
+      "id": "p6",
+      "from": "n15",
+      "to": "n16",
+      "diameter": 0.04,
+      "trench_id": "t3"
+    },
+    {
+      "id": "p7",
+      "from": "n1",
+      "to": "b1",
+      "diameter": 0.04,
+      "trench_id": "t4"
+    },
+    {
+      "id": "p8",
+      "from": "n15",
+      "to": "b1",
+      "diameter": 0.04,
+      "trench_id": "t4"
+    },
+    {
+      "id": "p9",
+      "from": "n28",
+      "to": "b15",
+      "diameter": 0.04,
+      "trench_id": "t5"
+    },
+    {
+      "id": "p10",
+      "from": "n14",
+      "to": "b15",
+      "diameter": 0.04,
+      "trench_id": "t5"
+    },
+    {
+      "id": "p11",
+      "from": "n27",
+      "to": "n28",
+      "diameter": 0.04,
+      "trench_id": "t6"
+    },
+    {
+      "id": "p12",
+      "from": "n13",
+      "to": "b14",
+      "diameter": 0.04,
+      "trench_id": "t6"
+    },
+    {
+      "id": "p13",
+      "from": "n26",
+      "to": "n27",
+      "diameter": 0.04,
+      "trench_id": "t7"
+    },
+    {
+      "id": "p14",
+      "from": "n12",
+      "to": "n13",
+      "diameter": 0.04,
+      "trench_id": "t7"
+    },
+    {
+      "id": "p15",
+      "from": "n25",
+      "to": "n26",
+      "diameter": 0.04,
+      "trench_id": "t8"
+    },
+    {
+      "id": "p16",
+      "from": "n11",
+      "to": "n12",
+      "diameter": 0.04,
+      "trench_id": "t8"
+    },
+    {
+      "id": "p17",
+      "from": "n21",
+      "to": "n25",
+      "diameter": 0.04,
+      "trench_id": "t9"
+    },
+    {
+      "id": "p18",
+      "from": "n7",
+      "to": "n11",
+      "diameter": 0.04,
+      "trench_id": "t9"
+    },
+    {
+      "id": "p19",
+      "from": "n20",
+      "to": "n21",
+      "diameter": 0.04,
+      "trench_id": "t10"
+    },
+    {
+      "id": "p20",
+      "from": "n6",
+      "to": "n7",
+      "diameter": 0.04,
+      "trench_id": "t10"
+    },
+    {
+      "id": "p21",
+      "from": "n19",
+      "to": "n20",
+      "diameter": 0.04,
+      "trench_id": "t11"
+    },
+    {
+      "id": "p22",
+      "from": "n5",
+      "to": "n6",
+      "diameter": 0.04,
+      "trench_id": "t11"
+    },
+    {
+      "id": "p23",
+      "from": "n18",
+      "to": "n19",
+      "diameter": 0.04,
+      "trench_id": "t12"
+    },
+    {
+      "id": "p24",
+      "from": "n4",
+      "to": "n5",
+      "diameter": 0.04,
+      "trench_id": "t12"
+    },
+    {
+      "id": "p25",
+      "from": "n21",
+      "to": "n22",
+      "diameter": 0.04,
+      "trench_id": "t13"
+    },
+    {
+      "id": "p26",
+      "from": "n7",
+      "to": "n8",
+      "diameter": 0.04,
+      "trench_id": "t13"
+    },
+    {
+      "id": "p27",
+      "from": "n22",
+      "to": "n23",
+      "diameter": 0.04,
+      "trench_id": "t14"
+    },
+    {
+      "id": "p28",
+      "from": "n8",
+      "to": "n9",
+      "diameter": 0.04,
+      "trench_id": "t14"
+    },
+    {
+      "id": "p29",
+      "from": "n23",
+      "to": "n24",
+      "diameter": 0.04,
+      "trench_id": "t15"
+    },
+    {
+      "id": "p30",
+      "from": "n9",
+      "to": "n10",
+      "diameter": 0.04,
+      "trench_id": "t15"
+    },
+    {
+      "id": "p31",
+      "from": "n24",
+      "to": "b10",
+      "diameter": 0.04,
+      "trench_id": "t16"
+    },
+    {
+      "id": "p32",
+      "from": "n10",
+      "to": "b10",
+      "diameter": 0.04,
+      "trench_id": "t16"
+    },
+    {
+      "id": "p33",
+      "from": "n5",
+      "to": "ghe1",
+      "diameter": 0.04,
+      "trench_id": "t17"
+    },
+    {
+      "id": "p34",
+      "from": "n19",
+      "to": "ghe1",
+      "diameter": 0.04,
+      "trench_id": "t17"
+    },
+    {
+      "id": "p35",
+      "from": "n18",
+      "to": "b5",
+      "diameter": 0.04,
+      "trench_id": "t18"
+    },
+    {
+      "id": "p36",
+      "from": "n18",
+      "to": "b5",
+      "diameter": 0.04,
+      "trench_id": "t18"
+    },
+    {
+      "id": "p37",
+      "from": "n17",
+      "to": "b4",
+      "diameter": 0.04,
+      "trench_id": "t19"
+    },
+    {
+      "id": "p38",
+      "from": "n3",
+      "to": "b4",
+      "diameter": 0.04,
+      "trench_id": "t19"
+    },
+    {
+      "id": "p39",
+      "from": "n16",
+      "to": "b3",
+      "diameter": 0.04,
+      "trench_id": "t20"
+    },
+    {
+      "id": "p40",
+      "from": "n2",
+      "to": "b3",
+      "diameter": 0.04,
+      "trench_id": "t20"
+    },
+    {
+      "id": "p41",
+      "from": "n15",
+      "to": "b2",
+      "diameter": 0.04,
+      "trench_id": "t21"
+    },
+    {
+      "id": "p42",
+      "from": "n1",
+      "to": "b2",
+      "diameter": 0.04,
+      "trench_id": "t21"
+    },
+    {
+      "id": "p43",
+      "from": "n28",
+      "to": "b14",
+      "diameter": 0.04,
+      "trench_id": "t22"
+    },
+    {
+      "id": "p44",
+      "from": "n14",
+      "to": "b14",
+      "diameter": 0.04,
+      "trench_id": "t22"
+    },
+    {
+      "id": "p45",
+      "from": "n27",
+      "to": "b13",
+      "diameter": 0.04,
+      "trench_id": "t23"
+    },
+    {
+      "id": "p46",
+      "from": "n13",
+      "to": "b13",
+      "diameter": 0.04,
+      "trench_id": "t23"
+    },
+    {
+      "id": "p47",
+      "from": "n26",
+      "to": "b12",
+      "diameter": 0.04,
+      "trench_id": "t24"
+    },
+    {
+      "id": "p48",
+      "from": "n12",
+      "to": "b12",
+      "diameter": 0.04,
+      "trench_id": "t24"
+    },
+    {
+      "id": "p49",
+      "from": "n25",
+      "to": "b11",
+      "diameter": 0.04,
+      "trench_id": "t25"
+    },
+    {
+      "id": "p50",
+      "from": "n11",
+      "to": "b11",
+      "diameter": 0.04,
+      "trench_id": "t25"
+    },
+    {
+      "id": "p51",
+      "from": "n22",
+      "to": "b7",
+      "diameter": 0.04,
+      "trench_id": "t26"
+    },
+    {
+      "id": "p52",
+      "from": "n8",
+      "to": "b7",
+      "diameter": 0.04,
+      "trench_id": "t26"
+    },
+    {
+      "id": "p53",
+      "from": "n23",
+      "to": "b8",
+      "diameter": 0.04,
+      "trench_id": "t27"
+    },
+    {
+      "id": "p54",
+      "from": "n9",
+      "to": "b8",
+      "diameter": 0.04,
+      "trench_id": "t27"
+    },
+    {
+      "id": "p55",
+      "from": "n24",
+      "to": "b9",
+      "diameter": 0.04,
+      "trench_id": "t28"
+    },
+    {
+      "id": "p56",
+      "from": "n10",
+      "to": "b9",
+      "diameter": 0.04,
+      "trench_id": "t28"
+    },
+    {
+      "id": "p57",
+      "from": "n20",
+      "to": "b6",
+      "diameter": 0.04,
+      "trench_id": "t29"
+    },
+    {
+      "id": "p58",
+      "from": "n6",
+      "to": "b6",
+      "diameter": 0.04,
+      "trench_id": "t29"
+    }
+  ],
+  "trenches": {
+    "comment": "assuming all trenches have same properties for simplicity, but this can be modified to have different properties per trench if desired",
+    "spacing": 0.25,
+    "depth": 1.5,
+    "soil": {
+      "conductivity": 2,
+      "rho_cp": 2343493,
+      "undisturbed_temp": 6.1
+    }
+  },
+  "comment2": "the rest of the file continues the same as Dr. Mitchell's JSON,",
+  "comment3": "defining the properties of all components"
+}
