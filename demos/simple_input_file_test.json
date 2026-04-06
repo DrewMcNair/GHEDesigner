@@ -1,0 +1,67 @@
+{
+  "version": 3.0,
+  "description": "Simple example system",
+  "nodes": [
+    { "id": "n1", "type": "branching" },
+    { "id": "n2", "type": "mixing" },
+    { "id": "n3", "type": "branching" },
+    { "id": "n4", "type": "mixing" },
+    { "id": "n5", "type": "heat_pump" },
+    { "id": "n6", "type": "heat_pump" }
+  ],
+  "pipes": [
+    {
+      "id": "p1",
+      "from": "n1",
+      "to": "n3",
+      "diameter": 0.04,
+      "trench_id": "t1"
+    },
+    {
+      "id": "p2",
+      "from": "n2",
+      "to": "n4",
+      "diameter": 0.04,
+      "trench_id": "t1"
+    },
+    {
+      "id": "p3",
+      "from": "n1",
+      "to": "n5",
+      "diameter": 0.04,
+      "trench_id": "t2"
+    },
+    {
+      "id": "p4",
+      "from": "n5",
+      "to": "n2",
+      "diameter": 0.04,
+      "trench_id": "t2"
+    },
+    {
+      "id": "p5",
+      "from": "n3",
+      "to": "n6",
+      "diameter": 0.04,
+      "trench_id": "t3"
+    },
+    {
+      "id": "p6",
+      "from": "n6",
+      "to": "n4",
+      "diameter": 0.04,
+      "trench_id": "t3"
+    }
+  ],
+  "trenches": {
+    "spacing": 0.25,
+    "depth": 1.5,
+    "soil": {
+      "conductivity": 2,
+      "rho_cp": 2343493,
+      "undisturbed_temp": 6.1
+    }
+  },
+  "comment2": "the rest of the file continues the same as Dr. Mitchell's JSON,",
+  "comment3": "defining the properties of all components"
+}
