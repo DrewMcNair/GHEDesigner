@@ -1,55 +1,54 @@
 {
   "version": 3.0,
   "description": "Simple example system",
-  "nodes": [
-    { "id": "n1", "type": "branching" },
-    { "id": "n2", "type": "mixing" },
-    { "id": "n3", "type": "branching" },
-    { "id": "n4", "type": "mixing" },
-    { "id": "n5", "type": "heat_pump" },
-    { "id": "n6", "type": "heat_pump" }
+  "topology_elements": [
+    { "id": "div1", "type": "diverging_junction" },
+    { "id": "mer1", "type": "merging_junction" },
+    { "id": "div2", "type": "diverging_junction" },
+    { "id": "mer2", "type": "merging_junction" },
+    { "id": "hp1", "type": "heat_pump" },
+    { "id": "hp2", "type": "heat_pump" }
   ],
+  "simulate_horizontal_effects": true,
+  "horizontal_discretization_level": 3,
+  "default_pipe_diameter": 0.04,
   "pipes": [
     {
-      "id": "p1",
-      "from": "n1",
-      "to": "n3",
-      "diameter": 0.04,
+      "id": "main_supply",
+      "from": "div1",
+      "to": "div2",
+      "diameter": 0.06,
       "trench_id": "t1"
     },
     {
-      "id": "p2",
-      "from": "n2",
-      "to": "n4",
-      "diameter": 0.04,
+      "id": "main_return",
+      "from": "mer1",
+      "to": "mer2",
+      "diameter": 0.06,
       "trench_id": "t1"
     },
     {
-      "id": "p3",
-      "from": "n1",
-      "to": "n5",
-      "diameter": 0.04,
+      "id": "hp1_supply",
+      "from": "div1",
+      "to": "hp1",
       "trench_id": "t2"
     },
     {
-      "id": "p4",
-      "from": "n5",
-      "to": "n2",
-      "diameter": 0.04,
+      "id": "hp1_return",
+      "from": "hp1",
+      "to": "mer1",
       "trench_id": "t2"
     },
     {
-      "id": "p5",
-      "from": "n3",
-      "to": "n6",
-      "diameter": 0.04,
+      "id": "hp2_supply",
+      "from": "div2",
+      "to": "hp2",
       "trench_id": "t3"
     },
     {
-      "id": "p6",
-      "from": "n6",
-      "to": "n4",
-      "diameter": 0.04,
+      "id": "hp2_return",
+      "from": "hp2",
+      "to": "mer2",
       "trench_id": "t3"
     }
   ],
