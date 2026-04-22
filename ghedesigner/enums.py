@@ -1,11 +1,11 @@
 from enum import Enum, auto
 
 
-class PipeType(Enum):
-    COAXIAL = "COAXIAL"
-    DOUBLEUTUBEPARALLEL = "DOUBLEUTUBEPARALLEL"
-    DOUBLEUTUBESERIES = "DOUBLEUTUBESERIES"
-    SINGLEUTUBE = "SINGLEUTUBE"
+class BHPipeType(Enum):
+    COAXIAL = auto()
+    DOUBLEUTUBEPARALLEL = auto()
+    DOUBLEUTUBESERIES = auto()
+    SINGLEUTUBE = auto()
 
 
 class DoubleUTubeConnType(Enum):
@@ -29,8 +29,8 @@ class DesignGeomType(Enum):
 
 
 class FlowConfigType(Enum):
-    BOREHOLE = "BOREHOLE"
-    SYSTEM = "SYSTEM"
+    BOREHOLE = auto()
+    SYSTEM = auto()
 
 
 class FluidType(Enum):
