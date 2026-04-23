@@ -54,7 +54,11 @@ def run(input_file_path: Path, output_directory: Path) -> int:
     all_ghe_has_loads = all(unsized_ghe_contains_loads)
     no_ghe_has_loads = not any(unsized_ghe_contains_loads)
     building_input = "building" in full_inputs
-    valid_load_source = all_ghe_has_loads ^ (building_input and no_ghe_has_loads)  # XOR because we don't want both
+    
+    # --- BUG FIX: Check for central loop early so we can bypass the XOR trap ---
+    central_loop = "central_loop" in full_inputs
+    valid_load_source = central_loop or (all_ghe_has_loads ^ (building_input and no_ghe_has_loads))
+    
     if not valid_load_source:
         logger.warning("Bad load specified, need exactly one of: loads in each ghe, or building object")
 
@@ -62,7 +66,7 @@ def run(input_file_path: Path, output_directory: Path) -> int:
     topology_props: list[dict] = full_inputs["topology"]
     ghe_names = []
     building_names = []
-    central_loop = "central_loop" in full_inputs
+    # --- (central_loop check was moved up from here) ---
     for component in topology_props:
         if component["type"] == "building":
             building_names.append(component["name"])
@@ -117,6 +121,7 @@ def run(input_file_path: Path, output_directory: Path) -> int:
             results.write_all_output_files(output_directory=output_directory, file_suffix="")
     elif central_loop:
         system = GHEHPSystem(input_file_path)
+        system.solve_system()
         system.create_output(output_directory / f"{input_file_path.stem}.csv")
     else:
         print("Bad input file, for now only the following configurations are available:")

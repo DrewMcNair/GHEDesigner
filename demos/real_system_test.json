@@ -1,0 +1,570 @@
+{
+  "version": 3,
+  "simulation_control": {
+    "simulation_method": "HOURLY",
+    "simulation_years": 1
+  },
+  "fluid": {
+    "fluid_name": "WATER",
+    "concentration_percent": 0,
+    "temperature": 20
+  },
+  "network_parameters": {
+    "design_pressure_loss_per_meter": 100.0,
+    "flow_factor": 1.5,
+    "pump_efficiency": {
+      "heat_pump": 0.2,
+      "ghe": 0.2,
+      "central_loop": 0.2
+    },
+    "total_loop_length": 690.0
+  },
+  "network": {
+    "nodes": {
+      "n1": {
+        "type": "branching",
+        "x": 190.0,
+        "y": 156.0,
+        "z": 0.0
+      },
+      "n2": {
+        "type": "device_in",
+        "x": 200.0,
+        "y": 156.0,
+        "z": 0.0
+      },
+      "n3": {
+        "type": "branching",
+        "x": 190.0,
+        "y": 129.0,
+        "z": 0.0
+      },
+      "n4": {
+        "type": "device_in",
+        "x": 200.0,
+        "y": 129.0,
+        "z": 0.0
+      },
+      "n5": {
+        "type": "branching",
+        "x": 190.0,
+        "y": 90.0,
+        "z": 0.0
+      },
+      "n6": {
+        "type": "device_in",
+        "x": 200.0,
+        "y": 90.0,
+        "z": 0.0
+      },
+      "n7": {
+        "type": "simple",
+        "x": 190.0,
+        "y": 15.0,
+        "z": 0.0
+      },
+      "n8": {
+        "type": "branching",
+        "x": 182.0,
+        "y": 15.0,
+        "z": 0.0
+      },
+      "n9": {
+        "type": "device_in",
+        "x": 182.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "n10": {
+        "type": "branching",
+        "x": 167.0,
+        "y": 15.0,
+        "z": 0.0
+      },
+      "n11": {
+        "type": "device_in",
+        "x": 167.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "n12": {
+        "type": "branching",
+        "x": 140.0,
+        "y": 15.0,
+        "z": 0.0
+      },
+      "n13": {
+        "type": "device_in",
+        "x": 140.0,
+        "y": 5.0,
+        "z": 0.0
+      },
+      "n14": {
+        "type": "branching",
+        "x": 61.0,
+        "y": 15.0,
+        "z": 0.0
+      },
+      "n15": {
+        "type": "device_in",
+        "x": 61.0,
+        "y": 5.0,
+        "z": 0.0
+      },
+      "n16": {
+        "type": "branching",
+        "x": 44.0,
+        "y": 15.0,
+        "z": 0.0
+      },
+      "n17": {
+        "type": "device_in",
+        "x": 44.0,
+        "y": 5.0,
+        "z": 0.0
+      },
+      "n18": {
+        "type": "branching",
+        "x": 17.0,
+        "y": 15.0,
+        "z": 0.0
+      },
+      "n19": {
+        "type": "device_in",
+        "x": 17.0,
+        "y": 0.0,
+        "z": 0.0
+      },
+      "n20": {
+        "type": "simple",
+        "x": 0.0,
+        "y": 15.0,
+        "z": 0.0
+      },
+      "n21": {
+        "type": "simple",
+        "x": 0.0,
+        "y": 65.0,
+        "z": 0.0
+      },
+      "n22": {
+        "type": "simple",
+        "x": 170.0,
+        "y": 65.0,
+        "z": 0.0
+      },
+      "n23": {
+        "type": "simple",
+        "x": 170.0,
+        "y": 170.0,
+        "z": 0.0
+      },
+      "n24": {
+        "type": "simple",
+        "x": 190.0,
+        "y": 170.0,
+        "z": 0.0
+      }
+    },
+    "pipes": {
+      "p1": {
+        "inlet_node": "n1",
+        "outlet_node": "n2",
+        "length": 10.0
+      },
+      "p2": {
+        "inlet_node": "n1",
+        "outlet_node": "n3",
+        "length": 27.0
+      },
+      "p3": {
+        "inlet_node": "n3",
+        "outlet_node": "n4",
+        "length": 10.0
+      },
+      "p4": {
+        "inlet_node": "n3",
+        "outlet_node": "n5",
+        "length": 39.0
+      },
+      "p5": {
+        "inlet_node": "n5",
+        "outlet_node": "n6",
+        "length": 10.0
+      },
+      "p6": {
+        "inlet_node": "n5",
+        "outlet_node": "n7",
+        "length": 75.0
+      },
+      "p7": {
+        "inlet_node": "n7",
+        "outlet_node": "n8",
+        "length": 8.0
+      },
+      "p8": {
+        "inlet_node": "n8",
+        "outlet_node": "n9",
+        "length": 15.0
+      },
+      "p9": {
+        "inlet_node": "n8",
+        "outlet_node": "n10",
+        "length": 15.0
+      },
+      "p10": {
+        "inlet_node": "n10",
+        "outlet_node": "n11",
+        "length": 15.0
+      },
+      "p11": {
+        "inlet_node": "n10",
+        "outlet_node": "n12",
+        "length": 27.0
+      },
+      "p12": {
+        "inlet_node": "n12",
+        "outlet_node": "n13",
+        "length": 10.0
+      },
+      "p13": {
+        "inlet_node": "n12",
+        "outlet_node": "n14",
+        "length": 79.0
+      },
+      "p14": {
+        "inlet_node": "n14",
+        "outlet_node": "n15",
+        "length": 10.0
+      },
+      "p15": {
+        "inlet_node": "n14",
+        "outlet_node": "n16",
+        "length": 17.0
+      },
+      "p16": {
+        "inlet_node": "n16",
+        "outlet_node": "n17",
+        "length": 10.0
+      },
+      "p17": {
+        "inlet_node": "n16",
+        "outlet_node": "n18",
+        "length": 27.0
+      },
+      "p18": {
+        "inlet_node": "n18",
+        "outlet_node": "n19",
+        "length": 15.0
+      },
+      "p19": {
+        "inlet_node": "n18",
+        "outlet_node": "n20",
+        "length": 17.0
+      },
+      "p20": {
+        "inlet_node": "n20",
+        "outlet_node": "n21",
+        "length": 50.0
+      },
+      "p21": {
+        "inlet_node": "n21",
+        "outlet_node": "n22",
+        "length": 170.0
+      },
+      "p22": {
+        "inlet_node": "n22",
+        "outlet_node": "n23",
+        "length": 105.0
+      },
+      "p23": {
+        "inlet_node": "n23",
+        "outlet_node": "n24",
+        "length": 20.0
+      },
+      "p24": {
+        "inlet_node": "n24",
+        "outlet_node": "n1",
+        "length": 14.0
+      }
+    }
+  },
+  "heat_pump": {
+    "HP1": {
+      "cooling_performance": {
+        "a": 0.0001,
+        "b": 0.00112,
+        "c": 1.13,
+        "c1": -0.393,
+        "c2": -30.3,
+        "c3": 6777.0,
+        "design_cap": 0.0
+      },
+      "heating_performance": {
+        "a": -7.13e-05,
+        "b": 0.00534,
+        "c": 0.734,
+        "c1": -0.124,
+        "c2": 112.0,
+        "c3": 4114.0,
+        "design_cap": 0.0
+      },
+      "design_flow_rate": 0.296,
+      "design_pressure_loss": 46000.0,
+      "pump_efficiency": 0.5
+    },
+    "HP2": {
+      "cooling_performance": {
+        "a": 0.0001,
+        "b": -0.00041,
+        "c": 1.15,
+        "c1": -1.2,
+        "c2": -4.72,
+        "c3": 9629.0,
+        "design_cap": 0.0
+      },
+      "heating_performance": {
+        "a": -7.86e-05,
+        "b": 0.00539,
+        "c": 0.734,
+        "c1": 0.178,
+        "c2": 158.0,
+        "c3": 6712.0,
+        "design_cap": 0.0
+      },
+      "design_flow_rate": 0.495,
+      "design_pressure_loss": 30000.0,
+      "pump_efficiency": 0.5
+    },
+    "HP3": {
+      "cooling_performance": {
+        "a": 0.0001,
+        "b": -0.00084,
+        "c": 1.16,
+        "c1": -2.16,
+        "c2": 46.8,
+        "c3": 12397.0,
+        "design_cap": 0.0
+      },
+      "heating_performance": {
+        "a": -6.8e-05,
+        "b": 0.00497,
+        "c": 0.738,
+        "c1": 0.091,
+        "c2": 224.0,
+        "c3": 9422.0,
+        "design_cap": 0.0
+      },
+      "design_flow_rate": 0.693,
+      "design_pressure_loss": 19000.0,
+      "pump_efficiency": 0.5
+    },
+    "HP4": {
+      "cooling_performance": {
+        "a": 0.0,
+        "b": 0.0,
+        "c": 0.0,
+        "c1": 0.0,
+        "c2": 0.0,
+        "c3": 0.0,
+        "design_cap": 0.0
+      },
+      "heating_performance": {
+        "a": -6.06e-05,
+        "b": 0.0051,
+        "c": 0.692,
+        "c1": -1.19,
+        "c2": 212.0,
+        "c3": 8932.0,
+        "design_cap": 0.0
+      },
+      "design_flow_rate": 0.425,
+      "design_pressure_loss": 50000.0,
+      "pump_efficiency": 0.5
+    }
+  },
+  "building": {
+    "b1z1": {
+      "inlet_node": "n2",
+      "outlet_node": null,
+      "heating_load": {
+        "file_path": "building_loads/BALTIMORE/B1Z1_BALTIMORE_1yr.csv",
+        "heat_pump_name": "HP1"
+      },
+      "cooling_load": {
+        "file_path": "building_loads/BALTIMORE/B1Z1_BALTIMORE_1yr.csv",
+        "heat_pump_name": "HP1"
+      }
+    },
+    "b1z2": {
+      "inlet_node": "n4",
+      "outlet_node": null,
+      "heating_load": {
+        "file_path": "building_loads/BALTIMORE/B1Z2_BALTIMORE_1yr.csv",
+        "heat_pump_name": "HP4"
+      },
+      "cooling_load": {
+        "file_path": "building_loads/BALTIMORE/B1Z2_BALTIMORE_1yr.csv",
+        "heat_pump_name": "HP4"
+      }
+    },
+    "b2z1": {
+      "inlet_node": "n9",
+      "outlet_node": null,
+      "heating_load": {
+        "file_path": "building_loads/BALTIMORE/B2Z1_BALTIMORE_1yr.csv",
+        "heat_pump_name": "HP2"
+      },
+      "cooling_load": {
+        "file_path": "building_loads/BALTIMORE/B2Z1_BALTIMORE_1yr.csv",
+        "heat_pump_name": "HP2"
+      }
+    },
+    "b2z2": {
+      "inlet_node": "n11",
+      "outlet_node": null,
+      "heating_load": {
+        "file_path": "building_loads/BALTIMORE/B2Z2_BALTIMORE_1yr.csv",
+        "heat_pump_name": "HP4"
+      },
+      "cooling_load": {
+        "file_path": "building_loads/BALTIMORE/B2Z2_BALTIMORE_1yr.csv",
+        "heat_pump_name": "HP4"
+      }
+    },
+    "b3z1": {
+      "inlet_node": "n15",
+      "outlet_node": null,
+      "heating_load": {
+        "file_path": "building_loads/BALTIMORE/B3Z1_BALTIMORE_1yr.csv",
+        "heat_pump_name": "HP3"
+      },
+      "cooling_load": {
+        "file_path": "building_loads/BALTIMORE/B3Z1_BALTIMORE_1yr.csv",
+        "heat_pump_name": "HP3"
+      }
+    },
+    "b3z2": {
+      "inlet_node": "n17",
+      "outlet_node": null,
+      "heating_load": {
+        "file_path": "building_loads/BALTIMORE/B3Z2_BALTIMORE_1yr.csv",
+        "heat_pump_name": "HP4"
+      },
+      "cooling_load": {
+        "file_path": "building_loads/BALTIMORE/B3Z2_BALTIMORE_1yr.csv",
+        "heat_pump_name": "HP4"
+      }
+    }
+  },
+  "ground_heat_exchanger": {
+    "ghe1": {
+      "flow_type": "BOREHOLE",
+      "grout": {
+        "conductivity": 1.0,
+        "rho_cp": 3901000
+      },
+      "soil": {
+        "conductivity": 2.0,
+        "rho_cp": 2343493,
+        "undisturbed_temp": 15.0
+      },
+      "pipe": {
+        "inner_diameter": 0.03404,
+        "outer_diameter": 0.04216,
+        "shank_spacing": 0.01856,
+        "roughness": 1e-06,
+        "conductivity": 0.4,
+        "rho_cp": 1542000,
+        "arrangement": "SINGLEUTUBE"
+      },
+      "borehole": {
+        "buried_depth": 2.0,
+        "diameter": 0.14
+      },
+      "inlet_node": "n6",
+      "outlet_node": null,
+      "flow_rate": 50.63,
+      "pre_designed": {
+        "arrangement": "RECTANGLE",
+        "boreholes_in_x_dimension": 15,
+        "boreholes_in_y_dimension": 10,
+        "spacing_in_x_dimension": 5.0,
+        "spacing_in_y_dimension": 5.0,
+        "H": 100.0
+      }
+    },
+    "ghe2": {
+      "flow_type": "BOREHOLE",
+      "grout": {
+        "conductivity": 1.0,
+        "rho_cp": 3901000
+      },
+      "soil": {
+        "conductivity": 2.0,
+        "rho_cp": 2343493,
+        "undisturbed_temp": 15.0
+      },
+      "pipe": {
+        "inner_diameter": 0.03404,
+        "outer_diameter": 0.04216,
+        "shank_spacing": 0.01856,
+        "roughness": 1e-06,
+        "conductivity": 0.4,
+        "rho_cp": 1542000,
+        "arrangement": "SINGLEUTUBE"
+      },
+      "borehole": {
+        "buried_depth": 2.0,
+        "diameter": 0.14
+      },
+      "inlet_node": "n13",
+      "outlet_node": null,
+      "flow_rate": 27.0,
+      "pre_designed": {
+        "arrangement": "RECTANGLE",
+        "boreholes_in_x_dimension": 10,
+        "boreholes_in_y_dimension": 8,
+        "spacing_in_x_dimension": 5.0,
+        "spacing_in_y_dimension": 5.0,
+        "H": 100.0
+      }
+    },
+    "ghe3": {
+      "flow_type": "BOREHOLE",
+      "grout": {
+        "conductivity": 1.0,
+        "rho_cp": 3901000
+      },
+      "soil": {
+        "conductivity": 2.0,
+        "rho_cp": 2343493,
+        "undisturbed_temp": 15.0
+      },
+      "pipe": {
+        "inner_diameter": 0.03404,
+        "outer_diameter": 0.04216,
+        "shank_spacing": 0.01856,
+        "roughness": 1e-06,
+        "conductivity": 0.4,
+        "rho_cp": 1542000,
+        "arrangement": "SINGLEUTUBE"
+      },
+      "borehole": {
+        "buried_depth": 2.0,
+        "diameter": 0.14
+      },
+      "inlet_node": "n19",
+      "outlet_node": null,
+      "flow_rate": 23.63,
+      "pre_designed": {
+        "arrangement": "RECTANGLE",
+        "boreholes_in_x_dimension": 10,
+        "boreholes_in_y_dimension": 7,
+        "spacing_in_x_dimension": 5.0,
+        "spacing_in_y_dimension": 5.0,
+        "H": 100.0
+      }
+    }
+  }
+}
