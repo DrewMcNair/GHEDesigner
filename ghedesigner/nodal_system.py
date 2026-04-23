@@ -11,7 +11,7 @@ from ghedesigner.media import Fluid, Grout, Soil, Pipe as MediaPipe
 from ghedesigner.utilities import load_input_file, get_loads, eskilson_log_times
 from ghedesigner.ghe.simulation import SimulationParameters
 
-# If you need hybrid support, make sure this file is accessible in the same directory/module structure:
+# If need hybrid support, make sure this file is accessible in the same directory/module structure:
 # from ghedesigner.ghe.HP_hybrid_loads_processor import HybridLoadProcessor
 
 
