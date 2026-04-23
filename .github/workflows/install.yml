@@ -6,25 +6,28 @@ jobs:
   build:
     strategy:
       matrix:
-        python-version: ["3.10", "3.11", "3.12", "3.13", "3.14"]
-        os: [ubuntu-latest, macos-latest, windows-latest]
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+        os: ["ubuntu-latest", "windows-latest"]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: actions/checkout@v6
-      - name: Install uv and set the Python version
-        uses: astral-sh/setup-uv@v7
+      - uses: actions/checkout@v4
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-          version: "0.11.2"
-      - name: Install the project
-        run: uv sync --frozen --managed-python --no-dev
+      - name: Install poetry
+        uses: abatilo/actions-poetry@v3
+        with:
+          poetry-version: latest
+      - name: Install the project dependencies
+        run: poetry install
       - name: Validate an input file
-        run: uv run ghedesigner --validate-only demos/find_design_rectangle_single_u_tube.json
+        run: poetry run ghedesigner --validate-only demos/find_design_rectangle_single_u_tube.json
       - name: Run a sample file
-        run: uv run ghedesigner demos/find_design_rectangle_single_u_tube.json ./tmp
+        run: poetry run ghedesigner demos/find_design_rectangle_single_u_tube.json ./tmp
       - name: Confirm IDF conversion option
-        run: uv run ghedesigner --convert=IDF ./tmp/SimulationSummary.json
+        run: poetry run ghedesigner --convert=IDF ./tmp/SimulationSummary.json
       - name: GHED version string
-        run: uv run ghedesigner --version
+        run: poetry run ghedesigner --version
       - name: GHED help
-        run: uv run ghedesigner --help
+        run: poetry run ghedesigner --help

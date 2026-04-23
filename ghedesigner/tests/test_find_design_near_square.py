@@ -2,75 +2,55 @@
 # interface with a single U-tube, multiple U-tube and coaxial tube.
 
 # This search is described in section 4.3.2 of Cook (2021) from pages 123-129.
-from typing import cast
 
-from ghedesigner.enums import FlowConfigType, TimestepType
-from ghedesigner.ghe.boreholes.core import Borehole
-from ghedesigner.ghe.design.near_square import DesignNearSquare, GeometricConstraintsNearSquare
-from ghedesigner.ghe.pipe import Pipe
-from ghedesigner.media import Fluid, Grout, Soil
+from ghedesigner.ghe.manager import GroundHeatExchanger
 from ghedesigner.tests.test_base_case import GHEBaseTest
 from ghedesigner.utilities import length_of_side
 
 
 class TestFindNearSquareDesign(GHEBaseTest):
-    def get_design(
-        self,
-        pipe: Pipe,
-        flow_rate: float,
-        length: float | None = None,
-        flow_type: FlowConfigType = FlowConfigType.BOREHOLE,
-    ):
-        soil = Soil(k=2.0, rho_cp=2343493.0, ugt=18.3)
-        grout = Grout(k=1.0, rho_cp=3901000.0)
-        fluid = Fluid(fluid_name="water", percent=0.0, temperature=20.0)
-        borehole = Borehole(burial_depth=2.0, borehole_radius=0.07)
-        ground_loads = self.get_atlanta_loads()
+    def test_find_single_u_tube_design(self):
+        ghe = GroundHeatExchanger()
+        ghe.set_single_u_tube_pipe(
+            inner_diameter=0.03404,
+            outer_diameter=0.04216,
+            shank_spacing=0.01856,
+            roughness=1.0e-6,
+            conductivity=0.4,
+            rho_cp=1542000.0,
+        )
+        ghe.set_soil(conductivity=2.0, rho_cp=2343493.0, undisturbed_temp=18.3)
+        ghe.set_grout(conductivity=1.0, rho_cp=3901000.0)
+        ghe.set_fluid()
+        ghe.set_borehole(buried_depth=2.0, diameter=0.140)
+        ghe.set_simulation_parameters(num_months=240)
+        ghe.set_ground_loads_from_hourly_list(self.get_atlanta_loads())
+
         b = 5.0
         number_of_boreholes = 32
-        if not length:
-            length = length_of_side(number_of_boreholes, b)
-        length = cast(float, length)
-        geometry = GeometricConstraintsNearSquare(b=b, length=length)
-        design = DesignNearSquare(
-            v_flow=flow_rate,
-            borehole=borehole,
-            fluid=fluid,
-            pipe=pipe,
-            grout=grout,
-            soil=soil,
-            start_month=1,
-            end_month=240,
-            max_eft=35,
-            min_eft=5,
-            max_height=135,
-            min_height=60,
-            continue_if_design_unmet=True,
-            max_boreholes=None,
-            geometric_constraints=geometry,
-            hourly_extraction_ground_loads=ground_loads,
-            method=TimestepType.HYBRID,
-            flow_type=flow_type,
-        )
-        search = design.find_design()
-        search.ghe.compute_g_functions(60, 135)
-        search.ghe.size(method=TimestepType.HYBRID, min_height=60, max_height=135, design_min_eft=5, design_max_eft=35)
-        return search
+        length = length_of_side(number_of_boreholes, b)
+        ghe.set_geometry_constraints_near_square(
+            max_height=135, min_height=60, b=b, length=length
+        )  # borehole spacing and field side length
+        ghe.set_design(flow_rate=0.3, flow_type_str="borehole", max_eft=35, min_eft=5)
+        ghe.find_design()
 
-    def test_find_single_u_tube_design(self):
-        pipe = Pipe.init_single_u_tube(
-            inner_diameter=0.03404,
-            outer_diameter=0.04216,
-            shank_spacing=0.01856,
-            roughness=1.0e-6,
-            conductivity=0.4,
-            rho_cp=1542000.0,
-        )
-        search = self.get_design(pipe, 0.3)
-        self.assert_design_matches_any(search, [(125.2, 156), (126.87, 156)])
+        project_name = "Atlanta Office Building: Design Example"
+        note = "Square-Near-Square Usage Example: Single U Tube"
+        author = "John Doe"
+        iteration_name = "Example 1"
+        output_file_directory = self.test_outputs_directory / "TestFindDesignNearSquareSingleU"
+        ghe.prepare_results(project_name, note, author, iteration_name)
+        ghe.write_output_files(output_file_directory, "_SU")
+        # can grab data off the outputs dict
+        u_tube_height = ghe.results.output_dict["ghe_system"]["active_borehole_length"]["value"]
+        self.assertAlmostEqual(125.0, u_tube_height, delta=0.1)
+        nbh = ghe.results.borehole_location_data_rows  # includes a header row
+        assert len(nbh) == 157
 
     def test_find_double_u_tube_parallel_design(self):
-        pipe = Pipe.init_double_u_tube_parallel(
+        ghe = GroundHeatExchanger()
+        ghe.set_double_u_tube_pipe_parallel(
             inner_diameter=0.03404,
             outer_diameter=0.04216,
             shank_spacing=0.01856,
@@ -78,11 +58,37 @@ class TestFindNearSquareDesign(GHEBaseTest):
             conductivity=0.4,
             rho_cp=1542000.0,
         )
-        search = self.get_design(pipe, 0.5)
-        self.assert_design_matches_any(search, [(129.3, 144), (130.14, 144)])
+        ghe.set_soil(conductivity=2.0, rho_cp=2343493.0, undisturbed_temp=18.3)
+        ghe.set_grout(conductivity=1.0, rho_cp=3901000.0)
+        ghe.set_fluid()
+        ghe.set_borehole(buried_depth=2.0, diameter=0.140)
+        ghe.set_simulation_parameters(num_months=240)
+        ghe.set_ground_loads_from_hourly_list(self.get_atlanta_loads())
+
+        b = 5.0
+        number_of_boreholes = 32
+        length = length_of_side(number_of_boreholes, b)
+        ghe.set_geometry_constraints_near_square(max_height=135, min_height=60, b=b, length=length)
+        ghe.set_design(flow_rate=0.5, flow_type_str="borehole", max_eft=35, min_eft=5)
+        ghe.find_design()
+
+        project_name = "Atlanta Office Building: Design Example"
+        note = "Square-Near-Square Usage Example: Double U Tube"
+        author = "John Doe"
+        iteration_name = "Example 1"
+        output_file_directory = self.test_outputs_directory / "TestFindDesignNearSquareDoubleUParallel"
+        ghe.prepare_results(project_name, note, author, iteration_name)
+        ghe.write_output_files(output_file_directory, "_DU")
+
+        # can grab data off the outputs dict
+        u_tube_height = ghe.results.output_dict["ghe_system"]["active_borehole_length"]["value"]
+        self.assertAlmostEqual(u_tube_height, 130.5, delta=0.1)
+        nbh = ghe.results.borehole_location_data_rows  # includes a header row
+        assert len(nbh) == 145
 
     def test_find_double_u_tube_series_design(self):
-        pipe = Pipe.init_double_u_tube_series(
+        ghe = GroundHeatExchanger()
+        ghe.set_double_u_tube_pipe_series(
             inner_diameter=0.03404,
             outer_diameter=0.04216,
             shank_spacing=0.01856,
@@ -90,42 +96,64 @@ class TestFindNearSquareDesign(GHEBaseTest):
             conductivity=0.4,
             rho_cp=1542000.0,
         )
-        search = self.get_design(pipe, 0.5)
-        self.assert_design_matches_any(search, [(129.3, 144), (130.16, 144)])
+        ghe.set_soil(conductivity=2.0, rho_cp=2343493.0, undisturbed_temp=18.3)
+        ghe.set_grout(conductivity=1.0, rho_cp=3901000.0)
+        ghe.set_fluid()
+        ghe.set_borehole(buried_depth=2.0, diameter=0.140)
+        ghe.set_simulation_parameters(num_months=240)
+        ghe.set_ground_loads_from_hourly_list(self.get_atlanta_loads())
+
+        b = 5.0
+        number_of_boreholes = 32
+        length = length_of_side(number_of_boreholes, b)
+        ghe.set_geometry_constraints_near_square(max_height=135, min_height=60, b=b, length=length)
+        ghe.set_design(flow_rate=0.5, flow_type_str="borehole", max_eft=35, min_eft=5)
+        ghe.find_design()
+
+        project_name = "Atlanta Office Building: Design Example"
+        note = "Square-Near-Square Usage Example: Double U Tube"
+        author = "John Doe"
+        iteration_name = "Example 1"
+        output_file_directory = self.test_outputs_directory / "TestFindDesignNearSquareDoubleUSeries"
+        ghe.prepare_results(project_name, note, author, iteration_name)
+        ghe.write_output_files(output_file_directory, "_DU")
+
+        # can grab data off the outputs dict
+        u_tube_height = ghe.results.output_dict["ghe_system"]["active_borehole_length"]["value"]
+        self.assertAlmostEqual(u_tube_height, 130.7, delta=0.1)
+        nbh = ghe.results.borehole_location_data_rows  # includes a header row
+        assert len(nbh) == 145
 
     def test_find_coaxial_pipe_design(self):
-        pipe = Pipe.init_coaxial(
+        ghe = GroundHeatExchanger()
+        ghe.set_coaxial_pipe(
             inner_pipe_d_in=0.0442,
             inner_pipe_d_out=0.050,
             outer_pipe_d_in=0.0974,
             outer_pipe_d_out=0.11,
             roughness=1.0e-6,
-            conductivity=(0.4, 0.4),
+            conductivity_inner=0.4,
+            conductivity_outer=0.4,
             rho_cp=1542000.0,
         )
-        search = self.get_design(pipe, 0.8)
-        self.assert_design_matches_any(search, [(123.14, 144), (125.39, 144)])
+        ghe.set_soil(conductivity=2.0, rho_cp=2343493.0, undisturbed_temp=18.3)
+        ghe.set_grout(conductivity=1.0, rho_cp=3901000.0)
+        ghe.set_fluid()
+        ghe.set_borehole(buried_depth=2.0, diameter=0.140)
+        ghe.set_simulation_parameters(num_months=240)
+        ghe.set_ground_loads_from_hourly_list(self.get_atlanta_loads())
 
-    def test_design_selection_system(self):
-        pipe = Pipe.init_single_u_tube(
-            inner_diameter=0.03404,
-            outer_diameter=0.04216,
-            shank_spacing=0.01856,
-            roughness=1.0e-6,
-            conductivity=0.4,
-            rho_cp=1542000.0,
-        )
-        search = self.get_design(pipe, 31.2, length=155, flow_type=FlowConfigType.SYSTEM)
-        self.assert_design_matches_any(search, [(133.9, 144), (134.12, 144)])
+        b = 5.0
+        number_of_boreholes = 32
+        length = length_of_side(number_of_boreholes, b)
+        ghe.set_geometry_constraints_near_square(max_height=135, min_height=60, b=b, length=length)
+        ghe.set_design(flow_rate=0.8, flow_type_str="borehole", max_eft=35, min_eft=5)
+        ghe.find_design()
 
-    def test_design_selection_borehole(self):
-        pipe = Pipe.init_single_u_tube(
-            inner_diameter=0.03404,
-            outer_diameter=0.04216,
-            shank_spacing=0.01856,
-            roughness=1.0e-6,
-            conductivity=0.4,
-            rho_cp=1542000.0,
-        )
-        search = self.get_design(pipe, 0.5, length=155)
-        self.assert_design_matches_any(search, [(127.9, 156), (129.25, 156)])
+        output_file_directory = self.test_outputs_directory / "TestFindRectangleDesignCoaxialUTube"
+        ghe.prepare_results("Project Name", "Notes", "Author", "Iteration Name")
+        ghe.write_output_files(output_file_directory, "")
+        u_tube_height = ghe.results.output_dict["ghe_system"]["active_borehole_length"]["value"]
+        self.assertAlmostEqual(122.7, u_tube_height, delta=0.1)
+        nbh = ghe.results.borehole_location_data_rows  # includes a header row
+        assert len(nbh) == 145

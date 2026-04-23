@@ -1,26 +1,15 @@
-import json
-import time
-from pathlib import Path
-
-from OpenGL_2D_class_GLFW import gl2D
-
 from ghedesigner.ghe.District_system_class import GHEHPSystem
 from ghedesigner.ghe.HP_hybrid_loads_processor import ProcessLoads
-
-# Get the directory where runner_code.py actually lives
-SCRIPT_DIR = Path(__file__).parent
-
+import json
+from OpenGL_2D_class_GLFW import gl2D, gl2DCircle, gl2DText,gl2DArrow, gl2DArc
+import time
 
 def main():
-    # Construct the path relative to the script location
-    input_txt_path = SCRIPT_DIR / "input_files" / "Hybrid_Real_system_input.txt"
-    input_json_path = SCRIPT_DIR / "input_files" / "BALTIMORE_find_design_bi_rectangle_single_u_tube.json"
+    f1 = open("input_files/Hybrid_Real_system_input.txt", 'r')
+    data = f1.readlines()  # read the entire file as a list of strings
+    f1.close()  # close the file  ... very important
 
-    f1 = open(input_txt_path)
-    data = f1.readlines()
-    f1.close()
-
-    f2 = open(input_json_path)
+    f2 = open("input_files/BALTIMORE_find_design_bi_rectangle_single_u_tube.json", 'r')
     json_data = json.load(f2)
 
     start_time = time.time()
@@ -61,3 +50,8 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+
+
+

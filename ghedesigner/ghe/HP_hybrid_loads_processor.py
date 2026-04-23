@@ -1,16 +1,16 @@
-from copy import deepcopy
-
-import numpy as np
 import pandas as pd
-from pygfunction.boreholes import Borehole
-
-from ghedesigner.enums import BHPipeType
-from ghedesigner.ghe.coaxial_borehole import get_bhe_object
+import numpy as np
 from ghedesigner.ghe.ground_loads import HybridLoad
-from ghedesigner.ghe.simulation import SimulationParameters
-from ghedesigner.media import GHEFluid, Grout, Soil
-from ghedesigner.media import Pipe as MediaPipe
 
+from copy import deepcopy
+from ghedesigner.ghe.coaxial_borehole import get_bhe_object
+from ghedesigner.media import Grout, Soil, GHEFluid
+from ghedesigner.media import Pipe as MediaPipe
+from pygfunction.boreholes import Borehole
+from ghedesigner.ghe.simulation import SimulationParameters
+from ghedesigner.enums import BHPipeType
+
+import json
 
 class Zone:
     def __init__(self):
@@ -27,7 +27,7 @@ class Zone:
         self.q_rej_hybrid_time_array = None
         self.q_htg_hybrid = None
         self.q_clg_hybrid = None
-        self.hybrid_time_array = None  # this is heat pump common time array and is same for all zones (heat pumps)
+        self.hybrid_time_array = None   # this is heat pump common time array and is same for all zones (heat pumps)
 
         self.COP_clg = None
         self.COP_htg = None
@@ -57,8 +57,8 @@ class Zone:
         return self.q_clg, self.q_htg
 
     def convert_HP_loads_to_ground_loads(self):
-        self.q_rej = self.q_clg * (1 + 1 / self.COP_clg)
-        self.q_ext = self.q_htg * (1 - 1 / self.COP_htg)
+        self.q_rej = self.q_clg * (1 + 1/self.COP_clg)
+        self.q_ext = self.q_htg * (1-1/self.COP_htg)
 
         return self.q_rej, self.q_ext
 
@@ -85,6 +85,7 @@ class Zone:
         self.q_rej_hybrid_time_array = rej_obj.hour[2:]
 
     def map_loads_to_common_time(self, common_time):
+
         q_ext_time = self.q_ext_hybrid_time_array
         q_rej_time = self.q_rej_hybrid_time_array
 
@@ -99,8 +100,8 @@ class Zone:
         return self.q_rej_common, self.q_ext_common
 
     def convert_ground_hybrid_loads_to_HP_loads(self, common_time):
-        self.q_htg_hybrid = self.q_ext_common / (1 - 1 / self.COP_htg) * (-1)
-        self.q_clg_hybrid = self.q_rej_common / (1 + 1 / self.COP_clg)
+        self.q_htg_hybrid = self.q_ext_common/(1-1/self.COP_htg)*(-1)
+        self.q_clg_hybrid = self.q_rej_common/(1+1/self.COP_clg)
         self.hybrid_time_array = common_time
 
 
@@ -139,7 +140,12 @@ class ProcessLoads:
         num_months = json_data["simulation-control"]["simulation-months"]
 
         # Construct objects
-        self.fluid = GHEFluid(fluid_data["fluid_name"], fluid_data["concentration_percent"], fluid_data["temperature"])
+        self.fluid = (
+            GHEFluid(
+                fluid_data["fluid_name"],
+                fluid_data["concentration_percent"],
+                fluid_data["temperature"]
+            ))
         # Pipe object (Single U-tube)
         r_in = pipe_data["inner_diameter"] / 2.0
         r_out = pipe_data["outer_diameter"] / 2.0
@@ -148,14 +154,18 @@ class ProcessLoads:
         pipe_positions = MediaPipe.place_pipes(s, r_out, 1)
 
         self.pipe = MediaPipe(
-            pipe_positions, r_in, r_out, s, pipe_data["roughness"], pipe_data["conductivity"], pipe_data["rho_cp"]
+            pipe_positions,
+            r_in,
+            r_out,
+            s,
+            pipe_data["roughness"],
+            pipe_data["conductivity"],
+            pipe_data["rho_cp"]
         )
 
         self.soil = Soil(soil_data["conductivity"], soil_data["rho_cp"], soil_data["undisturbed_temp"])
         self.grout = Grout(grout_data["conductivity"], grout_data["rho_cp"])
-        self.borehole = Borehole(
-            100, borehole_data["buried_depth"], borehole_data["diameter"] / 2.0, 0.0, 0.0
-        )  # I assign height as 100 for all
+        self.borehole = Borehole(100, borehole_data["buried_depth"], borehole_data["diameter"] / 2.0, 0.0, 0.0)  # I assign height as 100 for all
 
         # mass flow rate
         self.mass_flow_rate = design_data["flow_rate"]
@@ -169,17 +179,18 @@ class ProcessLoads:
         return self.fluid, self.pipe, self.grout, self.soil, self.borehole, self.sim_params
 
     def read_HP_load(self, data):
+
         for line in data:  # loop over all the lines
-            cells = [c.strip() for c in line.strip().split(",")]
+            cells = [c.strip() for c in line.strip().split(',')]
             keyword = cells[0].lower()
 
             if keyword == "simulation_info":
                 self.method = str(cells[1])
                 self.n_years = int(cells[2])
 
-            if keyword == "zone":
+            if keyword == 'zone':
                 df = pd.read_csv(cells[7])
-                self.time_array = df["Hours"].values.astype(float)  # this is same for all zones
+                self.time_array = df['Hours'].values.astype(float)         # this is same for all zones
                 self.time_array_size = len(self.time_array)
 
                 thiszone = Zone()
@@ -216,15 +227,11 @@ class ProcessLoads:
         for zone in self.zones:
             zone.q_clg, zone.q_htg = zone.initialize_load_arrays(self.n_years)
             zone.q_rej, zone.q_ext = zone.convert_HP_loads_to_ground_loads()
-            zone.generate_hybrid_loads(
-                bhe=self.bhe_eq, radial_numerical=self.bhe_eq, sim_params=self.sim_params, years=self.load_years
-            )
+            zone.generate_hybrid_loads(bhe=self.bhe_eq, radial_numerical=self.bhe_eq, sim_params=self.sim_params, years=self.load_years)
 
     def generate_common_timegrid(self):
-        all_times = np.concatenate(
-            [zone.q_ext_hybrid_time_array for zone in self.zones]
-            + [zone.q_rej_hybrid_time_array for zone in self.zones]
-        )
+        all_times = np.concatenate([zone.q_ext_hybrid_time_array for zone in self.zones] +
+                                       [zone.q_rej_hybrid_time_array for zone in self.zones])
         self.common_time = np.unique(all_times)
         self.common_time.sort()
         return self.common_time
@@ -288,3 +295,4 @@ class ProcessLoads:
         self.map_all_zones()
         self.create_HP_hybrid_loads()
         self.write_hybrid_output_csv()
+

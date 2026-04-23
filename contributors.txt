@@ -1,8 +1,7 @@
 Jeffrey Spitler <spitler@okstate.edu>
 Ishraque Borshon <ishraque@okstate.edu>
 Jack Cook <jack-c-cook@protonmail.com>
-Edwin Lee <leeed2001@gmail.com>
+Edwin Lee <edwin.lee@nrel.gov>
 Xiaobing Liu <liux2@ornl.gov>
-Matt Mitchell <matt.mitchell@nlr.gov>
+Matt Mitchell <matt.mitchell@nrel.gov>
 Timothy West <timothy.west@okstate.edu>
-Alex Swindler <alex.swindler@nlr.gov>

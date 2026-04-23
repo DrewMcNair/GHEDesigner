@@ -1,0 +1,4 @@
+﻿Case,n_rows1,n_columns1,n_rows2,n_columns2,n_rows3,n_columns3,b_spacing,m_hp1,m_hp2,m_hp3,m_hp4,m_hp5,m_hp6,m_ghe1,m_ghe2,m_ghe3,nbh_1GHE,nbh_2GHE,nbh_3GHE,m_hp1_single_WTA,m_hp2_single_WTA,m_hp3_single_WTA,m_hp_single_WTW
+,,,,,,,,,,,,,,,,,,,,,,,
+Case: 1-pipe,15,10,10,8,10,7,5,35.81,1.88,23.2,0.44,5.39,0.78,50.63,27,23.63,150,80,70,0.284,0.495,0.693,0.425
+Case: 2-pipe,15,10,10,8,10,7,5,35.81,1.88,23.2,0.44,5.39,0.78,33.75,18,15.75,150,80,70,0.284,0.495,0.693,0.425

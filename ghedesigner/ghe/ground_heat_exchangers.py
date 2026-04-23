@@ -8,9 +8,11 @@ from ghedesigner.constants import SEC_IN_HR, TWO_PI, VERSION
 from ghedesigner.enums import BHPipeType, TimestepType
 from ghedesigner.ghe.coaxial_borehole import get_bhe_object
 from ghedesigner.ghe.gfunction import GFunction, calc_g_func_for_multiple_lengths
+from ghedesigner.ghe.ground_loads import HybridLoad
 from ghedesigner.ghe.simulation import SimulationParameters
 from ghedesigner.media import Grout, Pipe, Soil
 from ghedesigner.utilities import solve_root
+from pathlib import Path
 
 
 class BaseGHE:
@@ -195,7 +197,6 @@ class BaseGHE:
 
         self.gFunction = g_function
 
-
 class GHE(BaseGHE):
     def __init__(
         self,
@@ -236,12 +237,12 @@ class GHE(BaseGHE):
         if load_years is None:
             load_years = [2019]
 
-        # hybrid_load = HybridLoad(
-        # self.hourly_extraction_ground_loads, self.bhe_eq, self.bhe_eq, sim_params, years=load_years
-        # )
+        #hybrid_load = HybridLoad(
+            #self.hourly_extraction_ground_loads, self.bhe_eq, self.bhe_eq, sim_params, years=load_years
+        #)
 
         # hybrid load object
-        # self.hybrid_load = hybrid_load
+        #self.hybrid_load = hybrid_load
 
         # List of heat pump exiting fluid temperatures
         self.hp_eft: list[float] = []
