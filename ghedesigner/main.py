@@ -8,6 +8,7 @@ from jsonschema.exceptions import ValidationError
 
 from ghedesigner.constants import MONTHS_IN_YEAR, VERSION
 from ghedesigner.district_system import GHEHPSystem
+from ghedesigner.nodal_system import NodalDistrictSystem
 from ghedesigner.enums import TimestepType
 from ghedesigner.ghe.manager import GroundHeatExchanger
 from ghedesigner.heat_pump_fixed_cop import HeatPumpFixedCOP
@@ -27,21 +28,29 @@ def run(input_file_path: Path, output_directory: Path) -> int:
     :param output_directory: path to write output files. Output directory must be a valid path.
     """
 
-    # validate inputs against the schema before doing anything
-    try:
-        validate_input_file(input_file_path)
-    except ValidationError:
-        return 1
-
-    # read all inputs into a dict
+    # 1. Read the inputs
     full_inputs = load_input_file(input_file_path)
+    input_file_version: int = full_inputs.get("version", 1)
 
-    # Read in all the inputs into small dicts
-    # it is possible to define multiple fluids, GHEs, and boreholes in the inputs, I'm just taking the first for now
-    input_file_version: int = full_inputs["version"]
-    if input_file_version != 2:  # noqa: PLR2004
-        print("Bad input file version, right now we support these versions: 1")
+    # 2. Validate older versions
+    if input_file_version < 3:
+        try:
+            validate_input_file(input_file_path)
+        except ValidationError:
+            return 1
+
+    # 3. Version Gatekeeper
+    if input_file_version not in [1, 2, 3]:  
+        print("Bad input file version, right now we support versions 1, 2, and 3")
         return 1
+
+    # If it's a version 3 nodal network, run it and exit immediately
+    if input_file_version == 3 and "network" in full_inputs:
+        logger.info("Routing simulation to NodalDistrictSystem solver...")
+        system = NodalDistrictSystem(input_file_path)
+        system.solve_system()
+        system.create_output(output_directory / f"{input_file_path.stem}.csv")
+        return 0
 
     # Validate the load source, it should be a building object or a GHE with loads specified
     # any GHE instances found with pre_designed will just be ignored since they don't need anything added

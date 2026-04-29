@@ -10,6 +10,7 @@
     "temperature": 20
   },
   "network_parameters": {
+    "pipe_configuration": "1-pipe",
     "design_pressure_loss_per_meter": 100.0,
     "flow_factor": 1.5,
     "pump_efficiency": {
@@ -166,128 +167,7 @@
         "z": 0.0
       }
     },
-    "pipes": {
-      "p1": {
-        "inlet_node": "n1",
-        "outlet_node": "n2",
-        "length": 10.0
-      },
-      "p2": {
-        "inlet_node": "n1",
-        "outlet_node": "n3",
-        "length": 27.0
-      },
-      "p3": {
-        "inlet_node": "n3",
-        "outlet_node": "n4",
-        "length": 10.0
-      },
-      "p4": {
-        "inlet_node": "n3",
-        "outlet_node": "n5",
-        "length": 39.0
-      },
-      "p5": {
-        "inlet_node": "n5",
-        "outlet_node": "n6",
-        "length": 10.0
-      },
-      "p6": {
-        "inlet_node": "n5",
-        "outlet_node": "n7",
-        "length": 75.0
-      },
-      "p7": {
-        "inlet_node": "n7",
-        "outlet_node": "n8",
-        "length": 8.0
-      },
-      "p8": {
-        "inlet_node": "n8",
-        "outlet_node": "n9",
-        "length": 15.0
-      },
-      "p9": {
-        "inlet_node": "n8",
-        "outlet_node": "n10",
-        "length": 15.0
-      },
-      "p10": {
-        "inlet_node": "n10",
-        "outlet_node": "n11",
-        "length": 15.0
-      },
-      "p11": {
-        "inlet_node": "n10",
-        "outlet_node": "n12",
-        "length": 27.0
-      },
-      "p12": {
-        "inlet_node": "n12",
-        "outlet_node": "n13",
-        "length": 10.0
-      },
-      "p13": {
-        "inlet_node": "n12",
-        "outlet_node": "n14",
-        "length": 79.0
-      },
-      "p14": {
-        "inlet_node": "n14",
-        "outlet_node": "n15",
-        "length": 10.0
-      },
-      "p15": {
-        "inlet_node": "n14",
-        "outlet_node": "n16",
-        "length": 17.0
-      },
-      "p16": {
-        "inlet_node": "n16",
-        "outlet_node": "n17",
-        "length": 10.0
-      },
-      "p17": {
-        "inlet_node": "n16",
-        "outlet_node": "n18",
-        "length": 27.0
-      },
-      "p18": {
-        "inlet_node": "n18",
-        "outlet_node": "n19",
-        "length": 15.0
-      },
-      "p19": {
-        "inlet_node": "n18",
-        "outlet_node": "n20",
-        "length": 17.0
-      },
-      "p20": {
-        "inlet_node": "n20",
-        "outlet_node": "n21",
-        "length": 50.0
-      },
-      "p21": {
-        "inlet_node": "n21",
-        "outlet_node": "n22",
-        "length": 170.0
-      },
-      "p22": {
-        "inlet_node": "n22",
-        "outlet_node": "n23",
-        "length": 105.0
-      },
-      "p23": {
-        "inlet_node": "n23",
-        "outlet_node": "n24",
-        "length": 20.0
-      },
-      "p24": {
-        "inlet_node": "n24",
-        "outlet_node": "n1",
-        "length": 14.0
-      }
-    }
+    "pipelines": {}
   },
   "heat_pump": {
     "HP1": {
@@ -310,8 +190,7 @@
         "design_cap": 0.0
       },
       "design_flow_rate": 0.296,
-      "design_pressure_loss": 46000.0,
-      "pump_efficiency": 0.5
+      "design_pressure_loss": 46000.0
     },
     "HP2": {
       "cooling_performance": {
@@ -333,8 +212,7 @@
         "design_cap": 0.0
       },
       "design_flow_rate": 0.495,
-      "design_pressure_loss": 30000.0,
-      "pump_efficiency": 0.5
+      "design_pressure_loss": 30000.0
     },
     "HP3": {
       "cooling_performance": {
@@ -356,8 +234,7 @@
         "design_cap": 0.0
       },
       "design_flow_rate": 0.693,
-      "design_pressure_loss": 19000.0,
-      "pump_efficiency": 0.5
+      "design_pressure_loss": 19000.0
     },
     "HP4": {
       "cooling_performance": {
@@ -379,8 +256,7 @@
         "design_cap": 0.0
       },
       "design_flow_rate": 0.425,
-      "design_pressure_loss": 50000.0,
-      "pump_efficiency": 0.5
+      "design_pressure_loss": 50000.0
     }
   },
   "building": {
@@ -388,72 +264,69 @@
       "inlet_node": "n2",
       "outlet_node": null,
       "heating_load": {
-        "file_path": "building_loads/BALTIMORE/B1Z1_BALTIMORE_1yr.csv",
-        "heat_pump_name": "HP1"
+        "file_path": "c:/Users/drewm/GHEDesigner/ghedesigner/tests/test_data/BALTIMORE/B1Z1_BALTIMORE_1yr.csv",
+        "heat_pump_name": "HP1",
+        "column_name": "HPHtgLd_W"
       },
       "cooling_load": {
-        "file_path": "building_loads/BALTIMORE/B1Z1_BALTIMORE_1yr.csv",
-        "heat_pump_name": "HP1"
+        "file_path": "c:/Users/drewm/GHEDesigner/ghedesigner/tests/test_data/BALTIMORE/B1Z1_BALTIMORE_1yr.csv",
+        "heat_pump_name": "HP1",
+        "column_name": "HPClgLd_W"
       }
     },
     "b1z2": {
       "inlet_node": "n4",
       "outlet_node": null,
       "heating_load": {
-        "file_path": "building_loads/BALTIMORE/B1Z2_BALTIMORE_1yr.csv",
-        "heat_pump_name": "HP4"
-      },
-      "cooling_load": {
-        "file_path": "building_loads/BALTIMORE/B1Z2_BALTIMORE_1yr.csv",
-        "heat_pump_name": "HP4"
+        "file_path": "c:/Users/drewm/GHEDesigner/ghedesigner/tests/test_data/BALTIMORE/B1Z2_BALTIMORE_1yr.csv",
+        "heat_pump_name": "HP4",
+        "column_name": "HPHtgLd_W"
       }
     },
     "b2z1": {
       "inlet_node": "n9",
       "outlet_node": null,
       "heating_load": {
-        "file_path": "building_loads/BALTIMORE/B2Z1_BALTIMORE_1yr.csv",
-        "heat_pump_name": "HP2"
+        "file_path": "c:/Users/drewm/GHEDesigner/ghedesigner/tests/test_data/BALTIMORE/B2Z1_BALTIMORE_1yr.csv",
+        "heat_pump_name": "HP2",
+        "column_name": "HPHtgLd_W"
       },
       "cooling_load": {
-        "file_path": "building_loads/BALTIMORE/B2Z1_BALTIMORE_1yr.csv",
-        "heat_pump_name": "HP2"
+        "file_path": "c:/Users/drewm/GHEDesigner/ghedesigner/tests/test_data/BALTIMORE/B2Z1_BALTIMORE_1yr.csv",
+        "heat_pump_name": "HP2",
+        "column_name": "HPClgLd_W"
       }
     },
     "b2z2": {
       "inlet_node": "n11",
       "outlet_node": null,
       "heating_load": {
-        "file_path": "building_loads/BALTIMORE/B2Z2_BALTIMORE_1yr.csv",
-        "heat_pump_name": "HP4"
-      },
-      "cooling_load": {
-        "file_path": "building_loads/BALTIMORE/B2Z2_BALTIMORE_1yr.csv",
-        "heat_pump_name": "HP4"
+        "file_path": "c:/Users/drewm/GHEDesigner/ghedesigner/tests/test_data/BALTIMORE/B2Z2_BALTIMORE_1yr.csv",
+        "heat_pump_name": "HP4",
+        "column_name": "HPHtgLd_W"
       }
     },
     "b3z1": {
       "inlet_node": "n15",
       "outlet_node": null,
       "heating_load": {
-        "file_path": "building_loads/BALTIMORE/B3Z1_BALTIMORE_1yr.csv",
-        "heat_pump_name": "HP3"
+        "file_path": "c:/Users/drewm/GHEDesigner/ghedesigner/tests/test_data/BALTIMORE/B3Z1_BALTIMORE_1yr.csv",
+        "heat_pump_name": "HP3",
+        "column_name": "HPHtgLd_W"
       },
       "cooling_load": {
-        "file_path": "building_loads/BALTIMORE/B3Z1_BALTIMORE_1yr.csv",
-        "heat_pump_name": "HP3"
+        "file_path": "c:/Users/drewm/GHEDesigner/ghedesigner/tests/test_data/BALTIMORE/B3Z1_BALTIMORE_1yr.csv",
+        "heat_pump_name": "HP3",
+        "column_name": "HPClgLd_W"
       }
     },
     "b3z2": {
       "inlet_node": "n17",
       "outlet_node": null,
       "heating_load": {
-        "file_path": "building_loads/BALTIMORE/B3Z2_BALTIMORE_1yr.csv",
-        "heat_pump_name": "HP4"
-      },
-      "cooling_load": {
-        "file_path": "building_loads/BALTIMORE/B3Z2_BALTIMORE_1yr.csv",
-        "heat_pump_name": "HP4"
+        "file_path": "c:/Users/drewm/GHEDesigner/ghedesigner/tests/test_data/BALTIMORE/B3Z2_BALTIMORE_1yr.csv",
+        "heat_pump_name": "HP4",
+        "column_name": "HPHtgLd_W"
       }
     }
   },

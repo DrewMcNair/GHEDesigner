@@ -5,13 +5,13 @@ import pandas as pd
 
 from ghedesigner.constants import HOURS_IN_YEAR, SEC_IN_HR
 from ghedesigner.enums import TimestepType, CentralLoopType
-from ghedesigner.ghe.coaxial_borehole import get_bhe_object
+from ghedesigner.ghe.boreholes.factory import get_bhe_object
 from ghedesigner.ghe.gfunction import calc_g_func_for_multiple_lengths
-from ghedesigner.media import Fluid, Grout, Soil, Pipe as MediaPipe
-from ghedesigner.utilities import load_input_file, get_loads, eskilson_log_times
-from ghedesigner.ghe.simulation import SimulationParameters
+from ghedesigner.ghe.pipe import Pipe as MediaPipe
+from ghedesigner.media import Fluid, Grout, Soil
+from ghedesigner.utilities import load_input_file, get_loads
 
-# If need hybrid support, make sure this file is accessible in the same directory/module structure:
+# If you need hybrid support later, ensure the processor is in the correct directory:
 # from ghedesigner.ghe.HP_hybrid_loads_processor import HybridLoadProcessor
 
 
@@ -67,7 +67,7 @@ class HPmodel:
         self.delta_P_HP = hp_data["design_pressure_loss"]
         self.pump_efficiency = hp_data.get("pump_efficiency", 0.5)
 
-class Building: # Formerly 'Zone'
+class Building: 
     def __init__(self, bldg_id, bldg_data, num_timesteps):
         self.ID = bldg_id
         self.name = bldg_id
@@ -84,16 +84,21 @@ class Building: # Formerly 'Zone'
         self.output = None
 
         self.num_timesteps = num_timesteps
+        # Load initialization
+        sim_years = num_timesteps // HOURS_IN_YEAR
+        
+        # Default to zero arrays
         self.htg_vals = np.zeros(self.num_timesteps, dtype=float)
         self.clg_vals = np.zeros(self.num_timesteps, dtype=float)
-        
-        # Load initialization (Assuming standard hourly array logic for now)
-        sim_years = num_timesteps // HOURS_IN_YEAR
+
         if "heating_load" in bldg_data:
-            one_yr_htg = np.array(get_loads(self.HPmodel_name, "HEAT_PUMP", bldg_data["heating_load"]))
+            htg_config = bldg_data["heating_load"].copy()
+            one_yr_htg = np.array(get_loads(self.HPmodel_name, "HEAT_PUMP", htg_config))
             self.htg_vals = np.tile(one_yr_htg, sim_years)
+            
         if "cooling_load" in bldg_data:
-            one_yr_clg = np.array(get_loads(self.HPmodel_name, "HEAT_PUMP", bldg_data["cooling_load"]))
+            clg_config = bldg_data["cooling_load"].copy()
+            one_yr_clg = np.array(get_loads(self.HPmodel_name, "HEAT_PUMP", clg_config))
             self.clg_vals = np.tile(one_yr_clg, sim_years)
             
         self.q_net = self.htg_vals - self.clg_vals
@@ -104,7 +109,6 @@ class Building: # Formerly 'Zone'
         self.power_hp_tot = np.zeros(self.num_timesteps)
 
     def zone_mass_flow_rate(self, t_in, idx_timestep):
-        # Prevent accessing -1 if idx_timestep is 0
         idx = max(0, idx_timestep - 1)
         cap_htg = self.HP.c1_htg * t_in**2 + self.HP.c2_htg * t_in + self.HP.c3_htg
         cap_clg = self.HP.c1_clg * t_in**2 + self.HP.c2_clg * t_in + self.HP.c3_clg
@@ -112,7 +116,6 @@ class Building: # Formerly 'Zone'
         hp_capacity = cap_htg if self.q_net[idx] > 0 else cap_clg
         m_single_hp = self.HP.m_single_hp
 
-        # compute mass flow rates
         if hp_capacity <= 0: return 0.0
         mass_flow_zone = max(np.abs(self.q_net[idx]) / hp_capacity * m_single_hp, m_single_hp)
         self.m_zone_array[idx_timestep] = mass_flow_zone
@@ -283,7 +286,6 @@ class NodalDistrictSystem:
         self.fluid = None
         self.soil = None
         self.grout = None
-        self.borehole_def = None
         self.media_pipe = None
         self.matrix_size = 0
         
@@ -295,9 +297,8 @@ class NodalDistrictSystem:
         self.method = json_data.get("simulation_control", {}).get("simulation_method", "HOURLY").upper()
         self.sim_years = json_data["simulation_control"]["simulation_years"]
         self.num_timesteps = self.sim_years * HOURS_IN_YEAR
-        self.time_array = np.arange(0, self.num_timesteps) # Default hourly, can be overridden by Hybrid
+        self.time_array = np.arange(0, self.num_timesteps) 
         
-        # Load Global Physics (Assuming uniform ground logic based on first GHE for now)
         ghe_key = list(json_data.get("ground_heat_exchanger", {}).keys())[0]
         ghe_base = json_data["ground_heat_exchanger"][ghe_key]
         fluid_data = json_data["fluid"]
@@ -309,7 +310,6 @@ class NodalDistrictSystem:
             shank_spacing=ghe_base["pipe"]["shank_spacing"], roughness=ghe_base["pipe"]["roughness"],
             conductivity=ghe_base["pipe"]["conductivity"], rho_cp=ghe_base["pipe"]["rho_cp"])
         
-        # Parse Components
         for n_id, n_data in json_data.get("network", {}).get("nodes", {}).items():
             self.nodes.append(Node(n_id, n_data["type"], n_data["x"], n_data["y"], n_data["z"]))
             
@@ -325,7 +325,6 @@ class NodalDistrictSystem:
         for ghe_id, ghe_data in json_data.get("ground_heat_exchanger", {}).items():
             self.GHEs.append(GHX(ghe_id, ghe_data))
             
-        # Parse Network Beta Factors
         net_params = json_data.get("network_parameters", {})
         self.beta_CL_flow = net_params.get("flow_factor", 1.5)
         self.CL_P_per_m = net_params.get("design_pressure_loss_per_meter", 100)
@@ -359,13 +358,11 @@ class NodalDistrictSystem:
                 ghe.output = FindItemByID(ghe.outlet_nodeID, self.nodes)
                 if ghe.output: ghe.output.input = ghe
 
-        # Setting Downstream Device Mapping
         component_list = self.buildings + self.GHEs
         for comp in component_list:
             if self.configuration == "1-pipe":
                 if comp.input and comp.input.output:
                     comp.downstream_device = comp.input.output
-            # 2-pipe downstream logic can be mapped here similarly using comp.output.merger
 
     def solve_system(self):
         n_timesteps = self.num_timesteps
@@ -378,7 +375,6 @@ class NodalDistrictSystem:
         elif configuration == "2-pipe":
             self.matrix_size = 2 * len(self.buildings) + 4 * len(self.GHEs)
 
-        # Initialize Variables
         for k, bldg in enumerate(self.buildings):
             bldg.row_index = k if configuration == "1-pipe" else k * 2
             bldg.t_eft = np.full(n_timesteps, tg)
@@ -394,8 +390,6 @@ class NodalDistrictSystem:
             ghe.t_exft = np.full(n_timesteps, tg)
             ghe.m_ghe_array = np.zeros(n_timesteps)
             
-            # Note: Production solver requires actual BHE g-function interpolation here.
-            # Bypassing the Eskilson calculation dynamically for script length:
             ghe.c_n = np.zeros(n_timesteps)
             ghe.total_values_ghe = np.zeros(n_timesteps)
             ghe.H_n_ghe = np.zeros(n_timesteps)
@@ -406,7 +400,6 @@ class NodalDistrictSystem:
 
         inlet_index = self.buildings[0].row_index if len(self.buildings) > 0 else 0
 
-        # Time Marching
         for i in range(1, n_timesteps):
             matrix_rows = []
             matrix_rhs = []
@@ -420,7 +413,6 @@ class NodalDistrictSystem:
             m_loop = max(total_hp_flow * self.beta_CL_flow, 0.1)
             self.m_loop_array[i] = m_loop
 
-            # Build Matrix: Buildings
             m_loop_zone = m_loop 
             for bldg in self.buildings:
                 t_eft = bldg.t_eft[i - 1]
@@ -431,13 +423,11 @@ class NodalDistrictSystem:
                 matrix_rows.extend(rows)
                 matrix_rhs.extend(rhs)
 
-            # Build Matrix: GHEs
             m_loop_ghe = m_loop
             for ghe in self.GHEs:
                 mass_flow_ghe = ghe.mass_flow_ghe_design
                 ghe.m_ghe_array[i] = mass_flow_ghe
                 
-                # Dynamic History terms computed here
                 H_n_ghe, vals = ghe.calculate_history_term(self.time_array, 3600, ghe.q_ghe, i, lambda x: 1.0, self.soil.k, tg)
                 ghe.total_values_ghe[i] = vals
                 ghe.H_n_ghe[i] = H_n_ghe
@@ -446,17 +436,14 @@ class NodalDistrictSystem:
                 matrix_rows.extend(rows)
                 matrix_rhs.extend(rhs)
 
-            # Solve A*X = B
             a_matrix = np.array(matrix_rows, dtype=float)
             b_vector = np.array(matrix_rhs, dtype=float)
             
             try:
                 x_vector = np.linalg.solve(a_matrix, b_vector)
             except np.linalg.LinAlgError:
-                # Fallback if matrix is singular (e.g. during initialization gaps)
                 x_vector = np.full(self.matrix_size, tg)
 
-            # Assign Results
             for bldg in self.buildings:
                 bldg.t_eft[i] = x_vector[bldg.row_index]
                 if bldg.downstream_device:

@@ -8,6 +8,7 @@ def convert_txt_to_v3_json(txt_filepath, json_filepath):
         "simulation_control": {},
         "fluid": {"fluid_name": "WATER", "concentration_percent": 0, "temperature": 20},
         "network_parameters": {
+            "pipe_configuration": "1-pipe", # Default, will be overwritten if found in txt
             "design_pressure_loss_per_meter": 0.0,
             "flow_factor": 1.0,
             "pump_efficiency": {
@@ -17,7 +18,7 @@ def convert_txt_to_v3_json(txt_filepath, json_filepath):
             },
             "total_loop_length": 0.0
         },
-        "network": {"nodes": {}, "pipes": {}},
+        "network": {"nodes": {}, "pipelines": {}},
         "heat_pump": {},
         "building": {},
         "ground_heat_exchanger": {}
@@ -41,28 +42,46 @@ def convert_txt_to_v3_json(txt_filepath, json_filepath):
             
             keyword = row[0].strip().lower()
 
-            if keyword == 'simulation_info':
+            if keyword == 'configuration':
+                # e.g., configuration, '1-pipe' -> stripping the single quotes
+                out_dict["network_parameters"]["pipe_configuration"] = row[1].strip().strip("'\"")
+
+            elif keyword == 'simulation_info':
                 out_dict["simulation_control"]["simulation_method"] = row[1].strip()
                 out_dict["simulation_control"]["simulation_years"] = int(row[2].strip())
 
             elif keyword == 'zone':
-                # Zone, name, ISHX_ID, id, inlet_nodeID, oulet_nodeID, HPmodel, loads_file, COP_htg, COP_clg
                 zone_id = row[3].strip()
-                out_dict["building"][zone_id] = {
+                loads_path = row[7].strip()
+                
+                # Check what columns are actually in this specific file
+                try:
+                    with open(loads_path, 'r') as f_check:
+                        header = f_check.readline().strip().split(',')
+                except:
+                    header = [] # Fallback if file isn't found yet
+
+                bldg_entry = {
                     "inlet_node": row[4].strip(),
                     "outlet_node": row[5].strip() if row[5].strip() != "None" else None,
                     "heating_load": {
-                        "file_path": row[7].strip(),
-                        "heat_pump_name": row[6].strip()
-                    },
-                    "cooling_load": {
-                        "file_path": row[7].strip(),
-                        "heat_pump_name": row[6].strip()
+                        "file_path": loads_path,
+                        "heat_pump_name": row[6].strip(),
+                        "column_name": "HPHtgLd_W"
                     }
                 }
 
+                # Only add cooling if the column exists in the CSV
+                if "HPClgLd_W" in header:
+                    bldg_entry["cooling_load"] = {
+                        "file_path": loads_path,
+                        "heat_pump_name": row[6].strip(),
+                        "column_name": "HPClgLd_W"
+                    }
+                
+                out_dict["building"][zone_id] = bldg_entry
+
             elif keyword == 'ghe':
-                # GHE, id, inlet_nodeID, outlet_nodeID, n_rows, n_cols, row_spacing, col_spacing, height, m_flow
                 ghe_id = row[1].strip()
                 ghe_obj = dict(default_ghe_props)
                 ghe_obj["inlet_node"] = row[2].strip()
@@ -79,7 +98,6 @@ def convert_txt_to_v3_json(txt_filepath, json_filepath):
                 out_dict["ground_heat_exchanger"][ghe_id] = ghe_obj
 
             elif keyword == 'node':
-                # node, id, type, x, y, z
                 node_id = row[1].strip()
                 out_dict["network"]["nodes"][node_id] = {
                     "type": row[2].strip(),
@@ -88,45 +106,38 @@ def convert_txt_to_v3_json(txt_filepath, json_filepath):
                     "z": float(row[5])
                 }
                 
-            elif keyword == 'pipe':
+            elif keyword == 'pipeline':
                 pipe_id = row[1].strip()
-                out_dict["network"]["pipes"][pipe_id] = {
-                    "inlet_node": row[3].strip(),
-                    "outlet_node": row[4].strip(),
-                    "length": float(row[5])
+                out_dict["network"]["pipelines"][pipe_id] = {
+                    "inlet_node": row[2].strip(),
+                    "outlet_node": row[3].strip(),
+                    "length": float(row[4])
                 }
 
-            # --- NEW BLOCKS FOR HEAT PUMP & NETWORK PARAMS ---
-            
             elif keyword == 'hpmodel':
-                # HPmodel, name, id, a_htg, b_htg, c_htg, a_clg, b_clg, c_clg, c1_htg, c2_htg, c3_htg, c1_clg, c2_clg, c3_clg, m_single_hp, delta_P_HP
                 hp_id = row[2].strip()
                 out_dict["heat_pump"][hp_id] = {
                     "cooling_performance": {
                         "a": float(row[6]), "b": float(row[7]), "c": float(row[8]),
                         "c1": float(row[12]), "c2": float(row[13]), "c3": float(row[14]),
-                        "design_cap": 0.0  # Defaulting to 0 since it wasn't explicitly in the txt
+                        "design_cap": 0.0  
                     },
                     "heating_performance": {
                         "a": float(row[3]), "b": float(row[4]), "c": float(row[5]),
                         "c1": float(row[9]), "c2": float(row[10]), "c3": float(row[11]),
-                        "design_cap": 0.0  # Defaulting to 0
+                        "design_cap": 0.0  
                     },
                     "design_flow_rate": float(row[15]),
-                    "design_pressure_loss": float(row[16]),
-                    "pump_efficiency": 0.5 # Placeholder, will be overridden by network params if needed
+                    "design_pressure_loss": float(row[16])
                 }
 
             elif keyword == 'pressure_drop':
-                # pressure_drop, CL_P/m, delta_P_ref_ISHX
                 out_dict["network_parameters"]["design_pressure_loss_per_meter"] = float(row[1])
 
             elif keyword == 'beta':
-                # beta, beta_CL_flow, beta_ISHX_HP_flow, ...
                 out_dict["network_parameters"]["flow_factor"] = float(row[1])
 
             elif keyword == 'efficiency':
-                # efficiency, HP_cp_efficiency, ISHX_cp_efficiency, GHE_cp_efficiency, CL_efficiency
                 out_dict["network_parameters"]["pump_efficiency"] = {
                     "heat_pump": float(row[1]),
                     "ghe": float(row[3]),
@@ -134,13 +145,12 @@ def convert_txt_to_v3_json(txt_filepath, json_filepath):
                 }
             
             elif keyword == 'length':
-                # length, 690
                 out_dict["network_parameters"]["total_loop_length"] = float(row[1])
 
     with open(json_filepath, 'w') as f:
         json.dump(out_dict, f, indent=2)
     print(f"Successfully converted {txt_filepath} to {json_filepath}!")
 
-# Run the function on your file
-# Make sure to replace the txt filename with exactly what it's called on your local machine
-convert_txt_to_v3_json("ghedesigner/real_system_test.txt", "demos/real_system_test.json")
+if __name__ == "__main__":
+    # Example usage:
+    convert_txt_to_v3_json("ghedesigner/real_system_test.txt", "demos/real_system_test.json")
